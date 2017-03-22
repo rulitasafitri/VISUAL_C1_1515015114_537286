@@ -124,6 +124,7 @@ public class FromPelanggan extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Total Harga");
 
+        txttotal.setForeground(new java.awt.Color(0, 102, 204));
         txttotal.setText("Rp.");
 
         buttonGroup1.add(jr);
@@ -136,7 +137,9 @@ public class FromPelanggan extends javax.swing.JFrame {
         je.setForeground(new java.awt.Color(255, 255, 255));
         je.setText("Express");
 
+        Sdiskon.setForeground(new java.awt.Color(255, 255, 255));
         Sdiskon.setMajorTickSpacing(10);
+        Sdiskon.setPaintLabels(true);
         Sdiskon.setPaintTicks(true);
         Sdiskon.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -144,6 +147,7 @@ public class FromPelanggan extends javax.swing.JFrame {
             }
         });
 
+        persen.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
         persen.setForeground(new java.awt.Color(255, 255, 255));
         persen.setText("0%");
 
@@ -175,15 +179,17 @@ public class FromPelanggan extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(persen, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Sdiskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Sdiskon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(persen, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel7)
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jr, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(je, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txttotal, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -196,6 +202,7 @@ public class FromPelanggan extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nama");
 
+        txtnama.setForeground(new java.awt.Color(0, 102, 255));
         txtnama.setText("Masukan Nama Anda");
         txtnama.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
@@ -217,6 +224,7 @@ public class FromPelanggan extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("No . Telepon");
 
+        txttlp.setForeground(new java.awt.Color(0, 102, 204));
         txttlp.setText("Masukan No Tlp ");
         txttlp.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
