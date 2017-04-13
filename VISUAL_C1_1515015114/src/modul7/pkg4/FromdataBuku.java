@@ -6,6 +6,7 @@
 package modul7.pkg4;
 
 import java.sql.*;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,9 +28,10 @@ public class FromdataBuku extends javax.swing.JFrame {
     
     private void InitTable(){
         model = new DefaultTableModel();
-        model.addColumn("Judul");
-        model.addColumn("penulis");
-        model.addColumn("Harga");
+        model.addColumn("ID BUKU");
+        model.addColumn("JUDUL");
+        model.addColumn("PENULIS");
+        model.addColumn("HARGA");
         
         tabel.setModel(model);
     }
@@ -40,10 +42,11 @@ public class FromdataBuku extends javax.swing.JFrame {
             stt = con.createStatement();
             rss = stt.executeQuery(sql);
             while(rss.next()){
-                Object[] o = new Object[3];
-                o[0] = rss.getString("judul");
-                o[1] = rss.getString("penulis");
-                o[2] = rss.getString("harga");
+                Object[] o = new Object[4];
+                o[0] = rss.getString("id");
+                o[1] = rss.getString("JUDUL");
+                o[2] = rss.getString("PENULIS");
+                o[3] = rss.getString("HARGA");
                 
                 model.addRow(o);
             }
@@ -64,6 +67,68 @@ public class FromdataBuku extends javax.swing.JFrame {
             }
     }
 
+  
+            public boolean UbahData(String id,String judul,String penulis,String harga){
+                try{
+                    String sql = "UPDATE buku set judul ='"+judul
+                            +"',penulis='"+penulis+"',harga="+harga
+                            +" WHERE id="+id+";";
+                    stt = con.createStatement();
+                    stt.executeUpdate(sql);
+                    return true;
+                }catch(SQLException e){
+                    System.out.println(e.getMessage());
+                    return false;
+                }
+            }
+            
+            public boolean HapusData(String id){
+                try{
+                    String sql = "DELETE FROM buku WHERE id="+id+";";
+                    stt = con.createStatement();
+                    stt.executeUpdate(sql);
+                    return true;
+                }catch(SQLException e){
+                    System.out.println(e.getMessage());
+                    return false;
+                }
+                
+            }
+            
+            private void PencarianData(String by,String cari){
+                try{
+                    String sql = "SELECT * FROM buku where "+by+" LIKE '%"+cari+"%';";
+                    stt = con.createStatement();
+                    rss = stt.executeQuery(sql);
+                    while(rss.next()){
+                        Object[] data = new Object[4];
+                        data[0] = rss.getString("id");
+                        data[1] = rss.getString("judul");
+                        data[2] = rss.getString("penulis");
+                        data[3] = rss.getInt("harga");
+                        model.addRow(data);
+                    }
+            } catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+           }
+            
+            
+            private boolean validasi(String judul, String penulis){
+                 try{
+                   stt = con.createStatement();
+                   String sql = "Select * from buku where judul='"+judul+"' and penulis='"+penulis+"'";
+                   rss=stt.executeQuery(sql);
+                   if (rss.next())
+                       return true;
+                   else
+                       return false;
+               }catch(SQLException e){
+                System.out.print(e.getMessage());
+                return false;
+               }
+            }
+           
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,9 +149,9 @@ public class FromdataBuku extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         cbcari = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnSimpan = new javax.swing.JButton();
+        btnUbah = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabel = new javax.swing.JTable();
@@ -126,6 +191,11 @@ public class FromdataBuku extends javax.swing.JFrame {
 
         txtcari.setFont(new java.awt.Font("Traditional Arabic", 1, 12)); // NOI18N
         txtcari.setForeground(new java.awt.Color(255, 102, 102));
+        txtcari.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtcariCaretUpdate(evt);
+            }
+        });
         txtcari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtcariKeyTyped(evt);
@@ -142,25 +212,30 @@ public class FromdataBuku extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(255, 102, 102));
 
-        jButton1.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 102, 102));
-        jButton1.setText("Simpan");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSimpan.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
+        btnSimpan.setForeground(new java.awt.Color(255, 102, 102));
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSimpanActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 102, 102));
-        jButton2.setText("Ulang");
-
-        jButton3.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 102, 102));
-        jButton3.setText("Hapus");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnUbah.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
+        btnUbah.setForeground(new java.awt.Color(255, 102, 102));
+        btnUbah.setText("Ubah");
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnUbahActionPerformed(evt);
+            }
+        });
+
+        btnHapus.setFont(new java.awt.Font("Traditional Arabic", 1, 18)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 102, 102));
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
             }
         });
 
@@ -186,6 +261,11 @@ public class FromdataBuku extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabel);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -198,11 +278,11 @@ public class FromdataBuku extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(jButton1)
+                .addComponent(btnSimpan)
                 .addGap(70, 70, 70)
-                .addComponent(jButton2)
+                .addComponent(btnUbah)
                 .addGap(69, 69, 69)
-                .addComponent(jButton3)
+                .addComponent(btnHapus)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(84, 84, 84))
@@ -212,9 +292,9 @@ public class FromdataBuku extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
+                    .addComponent(btnSimpan)
+                    .addComponent(btnUbah)
+                    .addComponent(btnHapus)
                     .addComponent(jButton4))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
@@ -331,13 +411,26 @@ public class FromdataBuku extends javax.swing.JFrame {
         TampilData();
     }//GEN-LAST:event_formComponentShown
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
+      
         String judul = txtJudul.getText();
         String penulis = comboPenulis.getSelectedItem().toString();
         String harga = txtHarga.getText();
-        TambahData(judul, penulis, harga);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        TambahData(judul,penulis,harga);
+        if(validasi(judul,penulis))
+        {
+            JOptionPane.showMessageDialog(null,"Data sudah ada");
+        }
+        
+        else
+        {
+            TambahData(judul,penulis,harga);
+            InitTable();TampilData();
+            JOptionPane.showMessageDialog(null, "Berhasil Simpan Data");
+        }
+        
+    }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void txtcariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcariKeyTyped
         // TODO add your handling code here:
@@ -351,10 +444,11 @@ public class FromdataBuku extends javax.swing.JFrame {
             rss = stt. executeQuery(sql);
             ResultSet rss=stt.executeQuery(sql);
             while(rss.next()){
-                Object[] o=new Object[3];
-                o[0]=rss.getString("judul");
-                o[1]=rss.getString("penulis");
-                o[2]=rss.getString("harga");
+                Object[] o=new Object[4];
+                o[0]=rss.getString("id");
+                o[1]=rss.getString("judul");
+                o[2]=rss.getString("penulis");
+                o[3]=rss.getString("harga");
                 model.addRow(o);
             }
             stt.close();
@@ -369,11 +463,55 @@ public class FromdataBuku extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
         int baris = tabel.getSelectedRow();
-        model.removeRow(baris);
-    }//GEN-LAST:event_jButton3ActionPerformed
+        String id = tabel.getValueAt(baris,0).toString();
+        if(HapusData(id))
+            JOptionPane.showMessageDialog(null, "Berhasil Hapus Data");
+        else
+            JOptionPane.showConfirmDialog(null, "Gagal Hapus Data");
+        InitTable();TampilData();
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void tabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelMouseClicked
+        // TODO add your handling code here:
+        int baris = tabel.getSelectedRow();
+        
+        txtJudul.setText(tabel.getValueAt(baris, 1).toString());
+        comboPenulis.setSelectedItem(tabel.getValueAt(baris, 2).toString());
+        txtHarga.setText(tabel.getValueAt(baris, 3).toString());
+    }//GEN-LAST:event_tabelMouseClicked
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        int baris = tabel.getSelectedRow();
+        String id = tabel.getValueAt(baris,0).toString();
+        String judul = txtJudul.getText();
+        String penulis = comboPenulis.getSelectedItem().toString();
+        String harga = txtHarga.getText();
+        if(validasi(judul,penulis)){
+             JOptionPane.showMessageDialog(null,"Data Sudah ada !");
+       
+        }
+        else{
+            UbahData(id, judul, penulis, harga);
+            
+            JOptionPane.showMessageDialog(null,"Berhasi Ubah Data");
+        }
+        InitTable();TampilData();
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void txtcariCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtcariCaretUpdate
+        // TODO add your handling code here:
+        InitTable();
+        if(txtcari.getText().length()==0){
+            TampilData();
+        }else{
+            PencarianData(cbcari.getSelectedItem().toString(),
+                    txtcari.getText());
+        }
+    }//GEN-LAST:event_txtcariCaretUpdate
 
     /**
      * @param args the command line arguments
@@ -411,11 +549,11 @@ public class FromdataBuku extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnUbah;
     private javax.swing.JComboBox cbcari;
     private javax.swing.JComboBox comboPenulis;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
